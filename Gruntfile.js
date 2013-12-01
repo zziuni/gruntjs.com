@@ -9,7 +9,7 @@ module.exports = function(grunt) {
     // server port, used to serve the site and run tests
     server_port: 5678,
     // wiki url
-    wiki_url: 'https://github.com/gruntjs/grunt-docs.git',
+    wiki_url: 'https://github.com/zziuni/grunt-docs.git',
     // If local is true retrieve the docs from the local
     // grunt-docs which is expected to sit in the
     // same dir as this one.
