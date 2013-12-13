@@ -1,7 +1,7 @@
 extends layout
 
 block gettingStarted
-  p Read the <a href="/getting-started">Getting Started</a> guide for instructions on using Grunt in your projects. Once you've done that, check out a <a href="/sample-gruntfile">Sample Gruntfile</a> and learn more about <a href="/configuring-tasks">Configuring Tasks</a>.
+  p <a href="/getting-started">Getting Started</a>를 먼저 읽자. 프로젝트에서 Grunt를 사용하는 방법을 소개하는 문서다. 그리고 나서 <a href="/sample-gruntfile">Sample Gruntfile</a>를 체크아웃하고, <a href="/configuring-tasks">Configuring Tasks</a>문서로 Task 환경설정을 공부하자.
 
 block content
   .container
@@ -12,18 +12,19 @@ block content
             .title-header
               span.grunt-name Grunt
               span.tag-line The JavaScript Task Runner
+              p.description 여기는 <a href="http://gruntjs.com">Grunt공식 사이트</a>를 번역한 비공식 사이트 입니다. 이상한 부분은 <a href="https://github.com/zziuni/grunt-docs/issues">이리</a>로 올려주세요. - @zziuni
 
           .why.left
-            h2 Why use a task runner?
-            p In one word: automation. The less work you have to do when performing repetitive tasks like minification, compilation, unit testing, linting, etc, the easier your job becomes. After you've configured it, a task runner can do most of that mundane work for you—and your team—with basically zero effort.
+            h2 Task Runner가 필요한 이유
+            p 자동화를 위해서다. 여러분이 해야할 반복 작업을 줄여준다. minification, compilation, unit testing, linting 등의 작업이 여기에 속한다. 일단 설정을 하고 나면, Task Runner가 여러분의 작업을 대신한다.
 
           .why.right
-            h2 Why use Grunt?
-            p The Grunt ecosystem is huge and it's growing every day. With literally hundreds of plugins to choose from, you can use Grunt to automate just about anything with a minimum of effort. If someone hasn't already built what you need, authoring and publishing your own Grunt plugin to npm is a breeze.
+            h2 Grunt를 써야 하는 이유
+            p Grunt 생태계는 지금도 크지만 계속 성장 중이다. 골라서 쓸 수 있는 수백개의 플러그인을 사용해서 어떤 일을 자동화해서 작업 효율을 높이는데 Grunt를 사용할 수 있다. 원하는 Grunt plugin이 없다면, npm으로 직접 제작 및 배포도 손 쉽게 할 수 있다.
 
           .technology
             h2 Available Grunt plugins
-            p Many of the tasks you need are already available as Grunt Plugins, and new plugins are published every day. While the <a href="/plugins">plugin listing</a> is more complete, here's a few you may have heard of.
+            p 사람들이 필요로 하는 대부분의 플러그인이 이미 준비되어있을 뿐만아니라 매일 새로운 plugin이 올라오고있다. 전체 <a href="/plugins">plugin 목록</a>은 계속 채워지도록 두고, 잘 알려진 것들만 먼저 보자.
             div
               a.technology(href='https://npmjs.org/package/grunt-contrib-coffee')
                 span.logo
@@ -52,43 +53,42 @@ block content
 
           .grunt-preview
             h2 Here's a preview!
-            p While installing grunt is simple, it's slightly more involved to get it running on your project.  To see what your effort will win you, take a look at this example output from running Grunt in a <a href="https://github.com/cowboy/jquery-tiny-pubsub">sample project</a>.
+            p grunt 설치가 간단하긴 하지만, 프로젝트에서 동작하는 방식을 이해할 필요가 있다. 이를 위해 <a href="https://github.com/cowboy/jquery-tiny-pubsub">sample project</a>에서 Grunt를 실행한 결과 예제를 살펴보자.
             // THX 2 @GF3 4 THE CSS <3!!
             pre.terminal
               span.command-prompt grunt
-              | 
+              |
               |Running "jshint:gruntfile" (jshint) task
               |<span class="green">&gt;&gt;</span> 1 file lint free.
-              | 
+              |
               |Running "jshint:src" (jshint) task
               |<span class="green">&gt;&gt;</span> 1 file lint free.
-              | 
+              |
               |Running "jshint:test" (jshint) task
               |<span class="green">&gt;&gt;</span> 1 file lint free.
-              | 
+              |
               |Running "qunit:files" (qunit) task
               |Testing test/tiny-pubsub.html....<span class="green">OK</span>
               |<span class="green">&gt;&gt;</span> 4 assertions passed (23ms)
-              | 
+              |
               |Running "clean:files" (clean) task
               |Cleaning "dist"...<span class="green">OK</span>
-              | 
+              |
               |Running "concat:dist" (concat) task
               |File "dist/ba-tiny-pubsub.js" created.
-              | 
+              |
               |Running "uglify:dist" (uglify) task
               |File "dist/ba-tiny-pubsub.min.js" created.
               |Uncompressed size: <span class="green">389</span> bytes.
               |Compressed size: <span class="green">119</span> bytes gzipped (<span class="green">185</span> bytes minified).
-              | 
+              |
               |<span class="green">Done, without errors.</span>
-              | 
+              |
               |<span class="command-prompt active"><span class="active-prompt"></span></span>
 
           .who-uses-grunt
             h2 Who uses Grunt?
-            p These are just a few companies and projects that are using Grunt. 
-              a(href='/who-uses-grunt') See more here.
+            p Grunt를 사용하는 회사와 프로젝트들이다. 전체 목록  a(href='/who-uses-grunt') 여기.
             div
               a.technology(href='/who-uses-grunt')
                 span.logo
