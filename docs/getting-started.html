@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>Getting started - Grunt: The JavaScript Task Runner</title><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700"><link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon"><link href="/rss" rel="alternate" title="Grunt Blog Feed" type="application/atom+xml"><script src="/js/vendor/lib/modernizr.min.js"></script></head><body class="page-docs page-secondary"><div class="navbar navbar-inverse"><div class="navbar-inner"><div class="container"><a href="/" class="brand"><span class="logo"></span></a><div class="nav-collapse collapse"><ul class="nav"><li><a href="/getting-started"><i class="icon-arrow-right"></i><span>Getting Started</span></a></li><li><a href="/plugins"><i class="icon-power-cord"></i><span>Plugins</span></a></li><li><a href="/getting-started"><i class="icon-document-alt-stroke"></i><span>Documentation</span></a></li><li><a href="/api"><i class="icon-cog"></i><span>API</span></a></li></ul><form class="navbar-search pull-right"><input type="text" placeholder="Search" class="search-query"></form></div><!--.nav-collapse--></div></div></div><div class="content"><div class="container getting-started"><div class="row-fluid"><div class="span9 page"><div class="hero-unit"><h1>Getting started</h1><p>Grunt와 Grunt 플러그인의 설치와 관리는 <a href="https://npmjs.org/">npm</a> 을 통해서 한다. npm은 <a href="http://nodejs.org/">Node.js</a>의 패키지 메니징 도구다.</p>
+<p><em>Grunt 0.4.x를 사용하려면 Node.js 버전이 <code>&gt;=0.8.0</code> 이여야 한다. Node.js에서 홀수 버전은 안정화되지 않은 개발 버전이다.</em></p>
+<h2><a class="anchor" href="#installing-the-cli" name="installing-the-cli">Installing the CLI</a></h2>
+<p><strong>Grunt 0.3을 이미 사용하고 있고 0.4.x로 업그레이드하는 거라면, <a href="/upgrading-from-0.3-to-0.4#grunt-0.3-notes">Grunt 0.3 Notes</a> 문서를 먼저 보자.</strong></p>
+<p>Grunt를 사용하려면 먼저 콘솔 어디서나 실행할 수 있는 Grunt&#39;s Command line interface (CLI)를 설치해야 한다. 이때 OSX나 *nix, BSD에서는 sudo가, 윈도우즈에서는 administrator 권한이 필요할 수도 있다.</p>
+<pre><code class="lang-shell">npm install -g grunt-cli</code></pre>
+<p><code>grunt-cli</code>를 설치하면, 여러분의 시스템 경로에 <code>grunt</code>란 컴멘드가 자동으로 추가해서, 어느 디렉터리에서나 <code>grunt</code>를 사용할 수 있게 된다.</p>
+<p>그러나 <code>grunt-cli</code>가 Grunt task runner(즉, <code>grunt</code>)를 설치하지는 않는다. Grunt CLI의 역할은 그저 <code>Gruntflie</code>라는 파일이 있는 위치에 설치된 Grunt를 찾아서 실행하는 것이다. 그러므로, 한 장비에서 여러 버전의 Grunt를 설치할 수 있다.</p>
+<h2><a class="anchor" href="#how-the-cli-works" name="how-the-cli-works">How the CLI works</a></h2>
+<p><code>grunt</code> 컴멘트를 치면, grunt-cli가 node의 <code>require()</code>를 사용해서 프로젝트 로컬의 grunt를 실행한다. 그러므로 해당 프로젝트의 루트 폴더가 아니여도 하위 폴더 어디서든 <code>grunt</code>를 실행할 수 있다.</p>
+<p>특정 위치에 설치된 Grunt를 찾은 후에 CLI는 Grunt 라이브러리의 로컬 설치 본을 불러온다. 이때  필요한 환경을 설정하기 위해서 <code>Gruntfile</code>란 파일을 사용한다. 그리고 CLI는 그 안에 어떤 동작을 위해 설정한 task들을 실행한다.</p>
+<p><em>이 과정이 더 궁금하면 <a href="https://github.com/gruntjs/grunt-cli/blob/master/bin/grunt">코드</a>를 읽어보자. 겁나 짧다.</em></p>
+<h2><a class="anchor" href="#working-with-an-existing-grunt-project" name="working-with-an-existing-grunt-project">Working with an existing Grunt project</a></h2>
+<p>만약 이미 Grunt CLI가 설치되어있고, 해당 프로젝트에 <code>package.json</code>과 <code>Grunfile</code>를 설정했다면, 한결 쉽게 작업할 수 있다.</p>
+<ol>
+<li>프로젝트 루트 폴더로 이동한다.</li>
+<li><code>npm install</code>로 프로젝트가 참조하는 모듈들을 설치한다.</li>
+<li><code>grunt</code>를 실행한다.</li>
+</ol>
+<p>이게 전부다. 사용 가능한 task는 <code>gurnt --help</code> 컴멘드로 볼 수 있지만 보통 해당 프로젝트 문서를 참고한다.</p>
+<h2><a class="anchor" href="#preparing-a-new-grunt-project" name="preparing-a-new-grunt-project">Preparing a new Grunt project</a></h2>
+<p>프로젝트를 새로 시작할 때는 보통 <code>package.json</code>과 <code>Grunfile</code>라는 파일이  먼저 있어야 한다.</p>
+<p><strong>package.json</strong>: 이 파일은 해당 프로젝트를 npm 모듈로 <a href="https://npmjs.org/">npm</a>에 퍼블리싱할 때 사용하는 메타데이터 저장 파일이다. 프로젝트에 필요한 grunt와 grunt 플러그인들은 이 파일의 <a href="https://npmjs.org/doc/json.html#devDependencies">devDependencies</a>라는 항목에 나열한다.</p>
+<p><strong>Gruntfile</strong>: 이 파일의 이름은 <code>Gruntfile.js</code>이거나 <code>Gruntfile.coffee</code>이다. task를 설정하거나 정의하고 Grunt 플러그인을 불러오는데 사용한다.</p>
+<h2><a class="anchor" href="#package.json" name="package.json">package.json</a></h2>
+<p><code>package.json</code>파일은 <code>Gruntfile</code>과 함께 프로젝트 루트 디렉토리에 있어야 하고, 프로젝트 소스와 함께 커밋(commit)되야 한다. <code>package.json</code>이 있는 폴더에서 컴맨드 명령어 <code>npm install</code>를 실행하면 이 파일 안에 있는 dependency 목록의 모듈들을 해당 버전으로 인스톨한다.</p>
+<p>프로젝트에 <code>package.json</code>를 추가하는 방법은 여러가지가 있다.</p>
+<ul>
+<li>대부분의 <a href="/project-scaffolding">grunt-init</a> 템플릿은 자동으로 프로젝트 전용  <code>package.json</code>파일을 생성한다.</li>
+<li><a href="https://npmjs.org/doc/init.html">npm init</a> 컴맨드 명령어는 기본 <code>package.json</code>을 생성한다.</li>
+<li>다음 예제를 기초로 필요한 부분은 <a href="https://npmjs.org/doc/json.html">specification</a> 문서를 참고 해서 확장한다.</li>
+</ul>
+<pre><code class="lang-js">{
+  <span class="string">"name"</span>: <span class="string">"my-project-name"</span>,
+  <span class="string">"version"</span>: <span class="string">"0.1.0"</span>,
+  <span class="string">"devDependencies"</span>: {
+    <span class="string">"grunt"</span>: <span class="string">"~0.4.2"</span>,
+    <span class="string">"grunt-contrib-jshint"</span>: <span class="string">"~0.6.3"</span>,
+    <span class="string">"grunt-contrib-nodeunit"</span>: <span class="string">"~0.2.0"</span>,
+    <span class="string">"grunt-contrib-uglify"</span>: <span class="string">"~0.2.2"</span>
+  }
+}</code></pre>
+<h3><a class="anchor" href="#installing-grunt-and-gruntplugins" name="installing-grunt-and-gruntplugins">Installing Grunt and gruntplugins</a></h3>
+<p>Grunt와 플러그인을 설치와 동시에 <code>package.json</code>와 연동시키려면 <code>npm install &lt;module&gt; --save-dev</code> 컴맨드 명령어를 사용한다. 이러면 <code>&lt;module&gt;</code>만 설치하고 끝나지 않고, 자동으로 <code>package.json</code>의 <a href="https://npmjs.org/doc/json.html#devDependencies">devDependencies</a> 항목에 추가된다. 버전은 <a href="https://npmjs.org/doc/json.html#Tilde-Version-Ranges">tilde version range</a>를 사용한다.</p>
+<p>예를 들면, 다음 컴맨드 명령어는 프로젝트에 Grunt 최신버전을 설치하고 <code>package.json</code>의 devDependencies 항목에 grunt를 추가한다.</p>
+<pre><code class="lang-shell">npm install grunt --save-dev</code></pre>
+<p>grunt 플러그인과 다른 node 모듈도 마찬가지다. 이렇게 설치하면 프로젝트의 <code>package.json</code>이 갱신된다.</p>
+<h2><a class="anchor" href="#the-gruntfile" name="the-gruntfile">The Gruntfile</a></h2>
+<p><code>Gruntfile.js</code>나 <code>Gruntfile.coffee</code>파일은 <code>package.json</code>와 함께 프로젝트 루트 폴더에 있어야 하는 자바스크립트 혹은, 커피스크립트 파일이다. 그리고 이 파일은 프로젝트 소스의 일부로 같이 커밋되야 한다.</p>
+<p>다음은 <code>Gruntfile</code>의 내부 구성요소다.</p>
+<ul>
+<li>&quot;wrapper&quot; 함수.</li>
+<li>프로젝트와 task의 환경설정.</li>
+<li>grunt plugin과 task 로딩.</li>
+<li>사용자 정의 task</li>
+</ul>
+<h3><a class="anchor" href="#an-example-gruntfile" name="an-example-gruntfile">An example Gruntfile</a></h3>
+<p>다음 <code>Gruntfile</code>은 프로젝트의 메타데이터를 <code>package.json</code>에서 가져와서 Grunt config로 주입한다. 그리고 <a href="http://github.com/gruntjs/grunt-contrib-uglify">grunt-contrib-uglify</a> 플러그인의 <code>uglify</code> task을 사용해서 소스코드를 미니파이(minify)하도록 설정하고, 메타데이터를 이용해서 동적인 베너 주석도 생성한다. 그리고 <code>uglify</code> task를 컴맨드 라인에서 <code>grunt</code> 명령어를 실행할 때 실행되는 기본 task로 지정했다.</p>
+<pre><code class="lang-js">module.exports = <span class="keyword">function</span>(grunt) {
+
+  <span class="comment">// 프로젝트 환경설정.</span>
+  grunt.initConfig({
+    pkg: grunt.file.readJSON(<span class="string">'package.json'</span>),
+    uglify: {
+      options: {
+        banner: <span class="string">'/*! &lt;%= pkg.name %&gt; &lt;%= grunt.template.today("yyyy-mm-dd") %&gt; */\n'</span>
+      },
+      build: {
+        src: <span class="string">'src/&lt;%= pkg.name %&gt;.js'</span>,
+        dest: <span class="string">'build/&lt;%= pkg.name %&gt;.min.js'</span>
+      }
+    }
+  });
+
+  <span class="comment">// "uglify" task를 지원하는 플러그인 로드.</span>
+  grunt.loadNpmTasks(<span class="string">'grunt-contrib-uglify'</span>);
+
+  <span class="comment">// Default task(s).</span>
+  grunt.registerTask(<span class="string">'default'</span>, [<span class="string">'uglify'</span>]);
+
+};</code></pre>
+<p>이 코드가 우리가 볼 <code>Grunfile</code> 예제 코드의 전다. 파트별로 살펴보자.</p>
+<h3><a class="anchor" href="#the-wrapper-function" name="the-wrapper-function">The &quot;wrapper&quot; function</a></h3>
+<p>모든 <code>Gruntfile</code>(그리고 그 플러그인)은 래퍼(wrapper) 함수를 기본 형태로 사용한다. 모든 Grunt 코드는 이 함수 안쪽에 있어야 한다.</p>
+<pre><code class="lang-js">module.exports = <span class="keyword">function</span>(grunt) {
+  <span class="comment">// grunt 관련 코드는 여기에</span>
+};</code></pre>
+<h3><a class="anchor" href="#project-and-task-configuration" name="project-and-task-configuration">Project and task configuration</a></h3>
+<p>대부분의 Grunt task는 configuration을 위한 데이터로 <a href="/grunt#grunt.initconfig">grunt.initConfig</a>  메서드의 인자로 전달되는 객체를 사용한다.(이를 configuraton 객체라 하자.)</p>
+<p>위의 예제에서, <code>grunt.file.readJSON(&#39;package.json&#39;)</code> 코드는 grunt config로 <code>package.json</code>에 저장된 JOSN 메타데이터를 인포트한다. 그러면 <code>&lt;% %&gt;</code> 템플릿 문자열을 사용해서 config의 모든 프로퍼티를 참조할 수 있다.(<code>package.json</code>값을 불러올 수 있다는 말이다.) 파일패스나 파일 목록 같은 configuration 데이터는 반복을 줄이기 위해서 이 방법으로 지정한다.</p>
+<p>여러분의 task가 필요로하는 프로퍼티와 충돌하지 않는 이상 configuraton 객체안에는 어떤 값을 넣어도 상관없다. 그리고 이 파일은 단순 JSON이 아닌 자바스크립트 파일이므로, 유효한 JS코드는 모두 사용가능하다. 즉, 필요한 configuration을 동적으로 생성할 수도 있다.</p>
+<p>다른 task도 마찬가지지만, <a href="http://github.com/gruntjs/grunt-contrib-uglify">grunt-contrib-uglify</a> 플러그인의 <code>uglify</code> task는 configuration 객체에서 동명의 프로퍼티 명(uglify)으로 설정에 필요한 값을 찾는다. 여기서는 옵션값인 <code>banner</code>와 소스파일(src) 하나를 타겟파일(dest) 하나로 미니파이(minify)하는 어그리파이(uglify) 타겟명인 <code>build</code>를 지정했다.</p>
+<pre><code class="lang-js"><span class="comment">// 프로젝트 환경설정.</span>
+grunt.initConfig({
+  pkg: grunt.file.readJSON(<span class="string">'package.json'</span>),
+  uglify: {
+    options: {
+      banner: <span class="string">'/*! &lt;%= pkg.name %&gt; &lt;%= grunt.template.today("yyyy-mm-dd") %&gt; */\n'</span>
+    },
+    build: {
+      src: <span class="string">'src/&lt;%= pkg.name %&gt;.js'</span>,
+      dest: <span class="string">'build/&lt;%= pkg.name %&gt;.min.js'</span>
+    }
+  }
+});</code></pre>
+<h3><a class="anchor" href="#loading-grunt-plugins-and-tasks" name="loading-grunt-plugins-and-tasks">Loading Grunt plugins and tasks</a></h3>
+<p>자주 사용하는 <a href="https://github.com/gruntjs/grunt-contrib-concat">concatenation</a>, [minification], <a href="https://github.com/gruntjs/grunt-contrib-jshint">linting</a>같은 task들은 [grunt plugins]으로 설정해서 사용할 수 있다. 즉, <code>package.json</code>의 dependency에 플러그인을 설정했다면, <code>npm install</code>을 통해서 이미 설치된 것이므로, 간단한 코드 추가로 <code>Gurntfile</code>에서 사용 가능하다.</p>
+<pre><code class="lang-js"><span class="comment">// "uglify" task를 지원하는 플러그인 로드.</span>
+grunt.loadNpmTasks(<span class="string">'grunt-contrib-uglify'</span>);</code></pre>
+<p><strong>참고</strong>: <code>grunt --help</code> 명령어를 사용하면 사용 가능한 taks 목록을 볼 수 있다.</p>
+<h3><a class="anchor" href="#custom-tasks" name="custom-tasks">Custom tasks</a></h3>
+<p><code>default</code> task를 설정하면 기본으로 실행할 task를 하나 혹은 그 이상 지정할 수 있다. 예를 들면, 컴맨드 라인에 특정 task를 지정하지 않고 <code>grunt</code>만 입력하면 <code>uglify</code> task가 실행된다. 이는 실제로는 <code>grunt uglify</code>나 <code>grunt default</code>와 같다. 배열 안에는 다수의 task를 지정할 수도 있다. (아규먼트는 있을 수도 있고 없을 수도 있다.)</p>
+<pre><code class="lang-js"><span class="comment">// Default task(s).</span>
+grunt.registerTask(<span class="string">'default'</span>, [<span class="string">'uglify'</span>]);</code></pre>
+<p>만약 프로젝트에서 Grunt 플러그인 목록에 없는 task가 필요하다면, <code>Gruntfile</code>에 직접 custom task를 만들 수도 있다. 예를 들면, 다음 <code>Gruntfile</code>은 task configuration을 전혀 활용하지 않는 custom <code>default</code> task를 정의한다.</p>
+<pre><code class="lang-js">module.exports = <span class="keyword">function</span>(grunt) {
+
+  <span class="comment">// default task의 기본형.</span>
+  grunt.registerTask(<span class="string">'default'</span>, <span class="string">'Log some stuff.'</span>, <span class="keyword">function</span>() {
+    grunt.log.write(<span class="string">'Logging some stuff...'</span>).ok();
+  });
+
+};</code></pre>
+<p>프로젝트 전용 task라면 <code>Gruntfile</code>안에 정의할 필요없이. 별도의 <code>.js</code> 파일로 정의하고 <a href="/grunt#grunt.loadtasks">grunt.loadTasks</a> 메서드로 불러와도 된다.</p>
+<h2><a class="anchor" href="#further-reading" name="further-reading">Further Reading</a></h2>
+<ul>
+<li><a href="/installing-grunt/">Installing grunt</a> 가이드는 인스톨 스펙, 프로덕션, 개발, Grunt와 grunt-cli의 버전에 대한 상세한 정보를 제공한다.</li>
+<li><a href="/configuring-tasks/">Configuring Tasks</a> 가이드는 <code>Gruntfile</code>에서 task, target, option, file을 설정하는 방법을 상세하게 설명한다. tempaltes, globbing pattern, importing external data도 설명한다.</li>
+<li><a href="/creating-tasks/">Creating Tasks</a> 가이드에는 Grunt task의 타입간의 차이점 목록이 있으며, task와 configuration의 샘플도 제공한다.</li>
+<li>custom task나 Grunt 플러그인에 대한 더 많은 정보는 <a href="/grunt">developer documentation</a>을 확인하자.</li>
+</ul>
+<div class="end-link">Found an error in the documentation?
+<a href='https://github.com/gruntjs/grunt-docs/issues'>File an issue</a>.</div></div></div><div class="span3"><div class="well sidebar-nav"><ul class="nav nav-list"><li class="nav-header"><i class="icon-document-alt-stroke"></i><span>Documentation</span></li><li><a href="/getting-started" class="active">Getting Started</a></li><li><a href="/configuring-tasks" class="false">Configuring Tasks</a></li><li><a href="/sample-gruntfile" class="false">Sample Gruntfile</a></li><li><a href="/creating-tasks" class="false">Creating Tasks</a></li><li><a href="/creating-plugins" class="false">Creating Plugins</a></li><li><a href="/using-the-cli" class="false">Using the CLI</a></li></ul><ul class="nav nav-list"><li class="nav-header"><span>Advanced</span></li><li><a href="/installing-grunt" class="false">Installing Grunt</a></li><li><a href="/frequently-asked-questions" class="false">Frequently Asked Questions</a></li><li><a href="/project-scaffolding" class="false">Project Scaffolding</a></li></ul><ul class="nav nav-list"><li class="nav-header"><span>Community</span></li><li><a href="/help-resources" class="false">Help Resources</a></li><li><a href="/who-uses-grunt" class="false">Who uses Grunt</a></li><li><a href="/contributing" class="false">Contributing</a></li></ul><ul class="nav nav-list"><li class="nav-header"><span>Migration guides</span></li><li><a href="/upgrading-from-0.3-to-0.4" class="false">Upgrading from 0.3 to 0.4</a></li></ul><div class="advertisements"><script>var p="http",d="static";if(document.location.protocol=="https:"){p+="s";d="engine";}var z=document.createElement("script");z.type="text/javascript";z.async=true;z.src=p+"://"+d+".adzerk.net/ados.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(z,s);</script><script>var ados = ados || {};ados.run = ados.run || [];ados.run.push(function() {/* load placement for account: Bocoup, site: Grunt, size: 120x90 - Button 1 and Text*/ados_add_placement(4433, 27854, "azk48893", 1);ados_load();});</script><div id="azk48893"></div><span class="adsbybocoup">Ads by <a href="http://bocoup.com">Bocoup</a>.</span></div></div></div></div></div></div><footer class="grunt-footer"><div class="inner"><div class="container"><ul class="pull-right"><li><a href="/blog">Blog</a></li><li><a href="/upgrading-from-0.3-to-0.4">Migration Guides</a></li><li><a href="/contributing">Contributing</a></li><li class="social"><a href="https://github.com/gruntjs/" alt="Grunt on GitHub"><span class="icon-github"></span></a></li><li class="social"><a href="https://twitter.com/gruntjs/" alt="Grunt on Twitter"><span class="icon-twitter"></span></a></li><li class="social"><a href="/rss" alt="Grunt blog RSS feed"><span class="icon-feed"></span></a></li></ul><ul class="pull-left"><li>Grunt development is sponsored by <a href="http://bocoup.com/" alt="Bocoup">Bocoup</a></li></ul></div></div></footer><script>var _gaq=[['_setAccount','UA-34623937-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script><script>document.write('<script type="text/javascript" src="' + ('https:'==document.location.protocol?'https://':'http://c.') + 'jslogger.com/jslogger.js"><\/script>');</script><script>window.jslogger = new JSLogger();</script></body></html>

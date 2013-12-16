@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>Creating tasks - Grunt: The JavaScript Task Runner</title><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700"><link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon"><link href="/rss" rel="alternate" title="Grunt Blog Feed" type="application/atom+xml"><script src="/js/vendor/lib/modernizr.min.js"></script></head><body class="page-docs page-secondary"><div class="navbar navbar-inverse"><div class="navbar-inner"><div class="container"><a href="/" class="brand"><span class="logo"></span></a><div class="nav-collapse collapse"><ul class="nav"><li><a href="/getting-started"><i class="icon-arrow-right"></i><span>Getting Started</span></a></li><li><a href="/plugins"><i class="icon-power-cord"></i><span>Plugins</span></a></li><li><a href="/getting-started"><i class="icon-document-alt-stroke"></i><span>Documentation</span></a></li><li><a href="/api"><i class="icon-cog"></i><span>API</span></a></li></ul><form class="navbar-search pull-right"><input type="text" placeholder="Search" class="search-query"></form></div><!--.nav-collapse--></div></div></div><div class="content"><div class="container creating-tasks"><div class="row-fluid"><div class="span9 page"><div class="hero-unit"><h1>Creating tasks</h1><p>Task는 Grunt의 존재 이유이자 가장 중요한 개념이다. 여러분이 하는 대부분의 일(task)은 <code>jshint</code>나 <code>nodeunit</code>같은 것들이다. 실행할 Task를 하나 이상 명시해서 Grunt에게 하고 싶은 일이 무엇인지 알려주면, Grunt가 그 일을 매번 실행한다.</p>
+<p>여러분이 task를 새로 명시하지 않았고, &quot;default&quot;란 이름의 task가 이미 정의되어 있다면, 기본값으로 그 task가 실행된다.</p>
+<h2><a class="anchor" href="#alias-tasks" name="alias-tasks">Alias Tasks</a></h2>
+<p>다음처럼 새로운 task에 다른 task 명단을 명시하면, 그 신규 task의 이름은 여러 task들을 대표하는 별명(alias)이 된다. 이런 &quot;alias task&quot;가 실행될 때면, <code>taskList</code>에 명시한 모든 task들이 순서대로 실행된다. 이때 <code>taskList</code> 전달인자는 배열이다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(taskName, [description, ] taskList)</code></pre>
+<p>다음 예제는 Grunt를 특정 task 지정없이 <code>grunt</code>로 실행할 때 자동으로 &quot;jshint&quot;, &quot;qunit&quot;, &quot;concat&quot;, &quot;uglify&quot; task들을 실행하는 &quot;default&quot;라는 alias task다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'default'</span>, [<span class="string">'jshint'</span>, <span class="string">'qunit'</span>, <span class="string">'concat'</span>, <span class="string">'uglify'</span>]);</code></pre>
+<p>Task 전달인자를 다음처럼 지정할 수도 있다. &quot;dist&quot;라는 alias task는 &quot;concat&quot;과 &quot;uglify&quot;에서 &quot;dist&quot; target 들만 실행한다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'dist'</span>, [<span class="string">'concat:dist'</span>, <span class="string">'uglify:dist'</span>]);</code></pre>
+<h2><a class="anchor" href="#multi-tasks" name="multi-tasks">Multi Tasks</a></h2>
+<p>Multi-task로 만든 task는 실행될 때, Grunt 환경 설정 객체에서 동명의 프로퍼티를 찾는다. 또한 multi-task는 적절한 target(task의 하위 개념) 명으로 각자의 환경설정을 가질 수 있다.</p>
+<p><code>grunt concat</code>란 컴멘드가 그 안의 모든 target를 순회하는 반면에, <code>grunt concat:foo</code>나 <code>grunt concat:bar</code>처럼 task와 target까지 지정하면, 특정 target의 환경설정만 가져온다. 이때  <a href="http://gruntjs.com/grunt.task#grunt.task.renametask">grunt.task.renameTask</a>로 이름을 변경하면, 바꾼 task 명으로 환경 설정을 찾는다.</p>
+<p><a href="https://github.com/gruntjs/grunt-contrib-jshint">grunt-contrib-jshint plugin jshint task</a>와 <a href="https://github.com/gruntjs/grunt-contrib-concat">grunt-contrib-concat plugin concat task</a>같이 contrib로 시작하는 대부분의 task는 multi task다.</p>
+<pre><code class="lang-javascript">grunt.registerMultiTask(taskName, [description, ] taskFunction)</code></pre>
+<p>다음 multi-task에서 <code>grunt log:foo</code>로 grunt를 실행하면 <code>foo: 1,2,3</code>가 로그로 찍히고, <code>grunt log:bar</code>로 grunt를 실행하면 <code>bar: hello world</code>가 찍힌다. 하지만 <code>grunt log</code>로 grunt를 실행하면 순서대로 <code>foo: 1,2,3</code>가 찍히고 <code>bar: hello world</code>가 찍힌 다음 <code>baz: false</code>가 찍힌다.</p>
+<pre><code class="lang-javascript">grunt.initConfig({
+  log: {
+    foo: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],
+    bar: <span class="string">'hello world'</span>,
+    baz: <span class="literal">false</span>
+  }
+});
+
+grunt.registerMultiTask(<span class="string">'log'</span>, <span class="string">'Log stuff.'</span>, <span class="keyword">function</span>() {
+  grunt.log.writeln(<span class="keyword">this</span>.target + <span class="string">': '</span> + <span class="keyword">this</span>.data);
+});</code></pre>
+<h2><a class="anchor" href="#basic-tasks" name="basic-tasks">&quot;Basic&quot; Tasks</a></h2>
+<p>Multi-task가 아닌 기본 task가 실행될 때는 Grunt가 환경설정을 바라보지 않는다. 지정한 task function만 실행한다. 기본 task에서는 콜론(:)로 구분한 인자 목록을 task function 함수의 전달인자로 넘길 수 있다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(taskName, [description, ] taskFunction)</code></pre>
+<p><code>grunt foo:testing:123</code>를 입력하면 <code>foo, testing 123</code>가 콘솔에 출력된다. <code>grunt foo</code>처럼 아무 인자도 넘기지 않고 실행하면 <code>foo, no args</code>가 콘솔에 찍힌다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'foo'</span>, <span class="string">'A sample task that logs stuff.'</span>, <span class="keyword">function</span>(arg1, arg2) {
+  <span class="keyword">if</span> (arguments.length === <span class="number">0</span>) {
+    grunt.log.writeln(<span class="keyword">this</span>.name + <span class="string">", no args"</span>);
+  } <span class="keyword">else</span> {
+    grunt.log.writeln(<span class="keyword">this</span>.name + <span class="string">", "</span> + arg1 + <span class="string">" "</span> + arg2);
+  }
+});</code></pre>
+<h2><a class="anchor" href="#custom-tasks" name="custom-tasks">Custom tasks</a></h2>
+<p>만들려는 Task가 &quot;multi-task&quot; 구조를 따르지 않는다면 기본 task형태로 사용자 정의  task를 만들자.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'default'</span>, <span class="string">'My "default" task description.'</span>, <span class="keyword">function</span>() {
+  grunt.log.writeln(<span class="string">'Currently running the "default" task.'</span>);
+});</code></pre>
+<p>task 안에서 다른 task를 실행할 수 있으며,</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'foo'</span>, <span class="string">'My "foo" task.'</span>, <span class="keyword">function</span>() {
+  <span class="comment">// "bar"와 "baz" task가 "foo" 가 끝난 후에 순서대로 실행하려고 대기중이다.</span>
+  grunt.task.run(<span class="string">'bar'</span>, <span class="string">'baz'</span>);
+  <span class="comment">// 이렇게 적어도 된다.</span>
+  grunt.task.run([<span class="string">'bar'</span>, <span class="string">'baz'</span>]);
+});</code></pre>
+<p>비동기도 가능하다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'asyncfoo'</span>, <span class="string">'My "asyncfoo" task.'</span>, <span class="keyword">function</span>() {
+  <span class="comment">// task를 비동기 모드로 만들고 "done" 함수로 제어한다.</span>
+  <span class="keyword">var</span> done = <span class="keyword">this</span>.async();
+  <span class="comment">// 동기 작업을 실행한다.</span>
+  grunt.log.writeln(<span class="string">'Processing task...'</span>);
+  <span class="comment">// 그리고 비동기 작업을 실행한다.</span>
+  setTimeout(<span class="keyword">function</span>() {
+    grunt.log.writeln(<span class="string">'All done!'</span>);
+    done();
+  }, <span class="number">1000</span>);
+});</code></pre>
+<p>이렇게 만든 task도 그 이름과 인자를 사용해서 접근할 수 있다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'foo'</span>, <span class="string">'My "foo" task.'</span>, <span class="keyword">function</span>(a, b) {
+  grunt.log.writeln(<span class="keyword">this</span>.name, a, b);
+});
+
+<span class="comment">// 사용법:</span>
+<span class="comment">// grunt foo foo:bar</span>
+<span class="comment">//   출력로그: "foo", undefined, undefined</span>
+<span class="comment">//   출력로그: "foo", "bar", undefined</span>
+<span class="comment">// grunt foo:bar:baz</span>
+<span class="comment">//   출력로그: "foo", "bar", "baz"</span></code></pre>
+<p>Task에서 에러가 발생하면 Task를 실패처리 할 수도 있다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'foo'</span>, <span class="string">'My "foo" task.'</span>, <span class="keyword">function</span>() {
+  <span class="keyword">if</span> (failureOfSomeKind) {
+    grunt.log.error(<span class="string">'에러 메세지'</span>);
+  }
+
+  <span class="comment">// task 실행 중 에러가 있다면 false를 반환해서 실패 처리한다.</span>
+  <span class="keyword">if</span> (ifErrors) { <span class="keyword">return</span> <span class="literal">false</span>; }
+
+  grunt.log.writeln(<span class="string">'성공 메세지'</span>);
+});</code></pre>
+<p>task가 실패하면, <code>--force</code>를 붙이지 않는한 그 이후 작업은 모두 중단된다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'foo'</span>, <span class="string">'My "foo" task.'</span>, <span class="keyword">function</span>() {
+  <span class="comment">// 동기적 실패 처리</span>
+  <span class="keyword">return</span> <span class="literal">false</span>;
+});
+
+grunt.registerTask(<span class="string">'bar'</span>, <span class="string">'My "bar" task.'</span>, <span class="keyword">function</span>() {
+  <span class="keyword">var</span> done = <span class="keyword">this</span>.async();
+  setTimeout(<span class="keyword">function</span>() {
+    <span class="comment">// 비동기적 실패 처리</span>
+    done(<span class="literal">false</span>);
+  }, <span class="number">1000</span>);
+});</code></pre>
+<p>Task는 다른 task가 성공적으로 실행되었는지 여부와 관련지을 수도 있다. <code>grunt.task.requires</code>는 실제로 다른 task를 실행하지는 않지만, 그 task가 실행되었는지, 실패는 없었는지를 확인한다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'foo'</span>, <span class="string">'My "foo" task.'</span>, <span class="keyword">function</span>() {
+  <span class="keyword">return</span> <span class="literal">false</span>;
+});
+
+grunt.registerTask(<span class="string">'bar'</span>, <span class="string">'My "bar" task.'</span>, <span class="keyword">function</span>() {
+  <span class="comment">// "foo" task가 실패했거나 실행된적이 없다면, 이 task를 실패 처리한다.</span>
+  grunt.task.requires(<span class="string">'foo'</span>);
+  <span class="comment">// 이 코드는 "foo" task가 성공적으로 실행된 적이 있을 때만 실행된다.</span>
+  grunt.log.writeln(<span class="string">'Hello, world.'</span>);
+});
+
+<span class="comment">// 사용법</span>
+<span class="comment">// grunt foo bar</span>
+<span class="comment">//   foo가 실패하는 task이므로 로그는 출력되지 않는다.</span>
+<span class="comment">// grunt bar</span>
+<span class="comment">//   foo가 실행된적이 없으므로 로그는 출력되지 않는다.</span></code></pre>
+<p><code>grunt.config.requires</code>를 사용하면, Task가 존재하지 않는 환경설정 프로퍼티를 요구할 때, 실패 처리할 수 있다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'foo'</span>, <span class="string">'My "foo" task.'</span>, <span class="keyword">function</span>() {
+  <span class="comment">// "meta.name" 란 환경설정 프로퍼티가 없으면 이 타스트를 실패 처리한다.</span>
+  grunt.config.requires(<span class="string">'meta.name'</span>);
+  <span class="comment">// 이경우도 "meta.name" 환경설정 프로퍼티가 없다면, 실패한다.</span>
+  grunt.config.requires([<span class="string">'meta'</span>, <span class="string">'name'</span>]);
+  <span class="comment">// 조건이 충족되어야 로그가 출력된다.</span>
+  grunt.log.writeln(<span class="string">'meta.name이 환경설정에 정의되어있을 때만 로그가 출력된다.'</span>);
+});</code></pre>
+<p>환경설정 프로퍼티에는 <code>grunt.config</code>로 접근할 수 있다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'foo'</span>, <span class="string">'My "foo" task.'</span>, <span class="keyword">function</span>() {
+  <span class="comment">// 프로퍼티 값을 로그로 출력한다. 프로퍼티가 undefined이면 null을 반환한다.</span>
+  grunt.log.writeln(<span class="string">'The meta.name property is: '</span> + grunt.config(<span class="string">'meta.name'</span>));
+  <span class="comment">// 이경우도 프로퍼티 값을 로그로 출력한다. 프로퍼티가 undefined이면 null을 반환한다.</span>
+  grunt.log.writeln(<span class="string">'The meta.name property is: '</span> + grunt.config([<span class="string">'meta'</span>, <span class="string">'name'</span>]));
+});</code></pre>
+<p>더 자세한 예제는 <a href="https://github.com/gruntjs/">contrib task</a>들을 참고하자.</p>
+<h2><a class="anchor" href="#cli-optiosn-environment" name="cli-optiosn-environment">CLI optiosn / environment</a></h2>
+<p>내용 없음.</p>
+<h2><a class="anchor" href="#why-doesn-t-my-asynchronous-task-complete" name="why-doesn-t-my-asynchronous-task-complete">Why doesn&#39;t my asynchronous task complete?</a></h2>
+<p>비동기 task를 짰는데 완료되지 않는다면, 대부분 <a href="/grunt.task#wiki-this-async">this.asynce</a>를 호출하지 않았기 때문이다. 쉽게 하려면, 동기식 코딩 스타일을 사용하고 나서 task 내부에 <code>this.async()</code>를 호출해서 비동기로 변경할 수 있다.</p>
+<p>그리고 다시 말하지만, <code>done()</code>에 인자로 <code>false</code>를 넘기면 Grunt에게 task가 실패했다고 알릴 수 있다.</p>
+<p>예제 코드다.</p>
+<pre><code class="lang-javascript">grunt.registerTask(<span class="string">'asyncme'</span>, <span class="string">'My asynchronous task.'</span>, <span class="keyword">function</span>() {
+  <span class="keyword">var</span> done = <span class="keyword">this</span>.async();
+  doSomethingAsync(done);
+});</code></pre>
+<div class="end-link">Found an error in the documentation?
+<a href='https://github.com/gruntjs/grunt-docs/issues'>File an issue</a>.</div></div></div><div class="span3"><div class="well sidebar-nav"><ul class="nav nav-list"><li class="nav-header"><i class="icon-document-alt-stroke"></i><span>Documentation</span></li><li><a href="/getting-started" class="false">Getting Started</a></li><li><a href="/configuring-tasks" class="false">Configuring Tasks</a></li><li><a href="/sample-gruntfile" class="false">Sample Gruntfile</a></li><li><a href="/creating-tasks" class="active">Creating Tasks</a></li><li><a href="/creating-plugins" class="false">Creating Plugins</a></li><li><a href="/using-the-cli" class="false">Using the CLI</a></li></ul><ul class="nav nav-list"><li class="nav-header"><span>Advanced</span></li><li><a href="/installing-grunt" class="false">Installing Grunt</a></li><li><a href="/frequently-asked-questions" class="false">Frequently Asked Questions</a></li><li><a href="/project-scaffolding" class="false">Project Scaffolding</a></li></ul><ul class="nav nav-list"><li class="nav-header"><span>Community</span></li><li><a href="/help-resources" class="false">Help Resources</a></li><li><a href="/who-uses-grunt" class="false">Who uses Grunt</a></li><li><a href="/contributing" class="false">Contributing</a></li></ul><ul class="nav nav-list"><li class="nav-header"><span>Migration guides</span></li><li><a href="/upgrading-from-0.3-to-0.4" class="false">Upgrading from 0.3 to 0.4</a></li></ul><div class="advertisements"><script>var p="http",d="static";if(document.location.protocol=="https:"){p+="s";d="engine";}var z=document.createElement("script");z.type="text/javascript";z.async=true;z.src=p+"://"+d+".adzerk.net/ados.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(z,s);</script><script>var ados = ados || {};ados.run = ados.run || [];ados.run.push(function() {/* load placement for account: Bocoup, site: Grunt, size: 120x90 - Button 1 and Text*/ados_add_placement(4433, 27854, "azk48893", 1);ados_load();});</script><div id="azk48893"></div><span class="adsbybocoup">Ads by <a href="http://bocoup.com">Bocoup</a>.</span></div></div></div></div></div></div><footer class="grunt-footer"><div class="inner"><div class="container"><ul class="pull-right"><li><a href="/blog">Blog</a></li><li><a href="/upgrading-from-0.3-to-0.4">Migration Guides</a></li><li><a href="/contributing">Contributing</a></li><li class="social"><a href="https://github.com/gruntjs/" alt="Grunt on GitHub"><span class="icon-github"></span></a></li><li class="social"><a href="https://twitter.com/gruntjs/" alt="Grunt on Twitter"><span class="icon-twitter"></span></a></li><li class="social"><a href="/rss" alt="Grunt blog RSS feed"><span class="icon-feed"></span></a></li></ul><ul class="pull-left"><li>Grunt development is sponsored by <a href="http://bocoup.com/" alt="Bocoup">Bocoup</a></li></ul></div></div></footer><script>var _gaq=[['_setAccount','UA-34623937-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script><script>document.write('<script type="text/javascript" src="' + ('https:'==document.location.protocol?'https://':'http://c.') + 'jslogger.com/jslogger.js"><\/script>');</script><script>window.jslogger = new JSLogger();</script></body></html>
